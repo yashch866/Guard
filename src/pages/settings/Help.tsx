@@ -308,7 +308,7 @@ Robot Health:
           </Accordion>
         </div>
       </div>
-      <QROverlay isOpen={isQROpen} onClose={() => setIsQROpen(false)} />
+      <QROverlay isOpen={false} onClose={() => setIsQROpen(false)} />
     </SettingsLayout>
   );
 };

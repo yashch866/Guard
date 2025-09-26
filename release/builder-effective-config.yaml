@@ -1,0 +1,28 @@
+directories:
+  output: release
+  buildResources: public
+appId: com.sakar.guard
+productName: Guard Controls
+files:
+  - filter:
+      - dist/**
+      - electron.mjs
+      - preload.js
+      - package.json
+extraResources:
+  - from: public/assets
+    to: assets
+    filter:
+      - '**/*'
+extraFiles:
+  - from: resources/app/main
+    to: app/main
+asar: false
+linux:
+  target:
+    - AppImage
+  category: Utility
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+electronVersion: 38.1.2

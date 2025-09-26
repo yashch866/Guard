@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Thermometer, Zap, QrCode, X } from "lucide-react";
+import { Thermometer, Zap } from "lucide-react";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
 import PasswordDialog from "@/components/PasswordDialog";
@@ -91,7 +91,6 @@ const SystemStatus = () => {
               toast({
                 title: "Camera Connected",
                 description: "Camera is connected but not streaming",
-                variant: "warning",
                 duration: 3000
               });
             }
@@ -172,57 +171,39 @@ const SystemStatus = () => {
       <div className="p-8">
         <h1 className="text-2xl font-bold text-center mb-8">SYSTEM STATUS</h1>
         
-        <div className="grid grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-2 gap-6 mb-8">
           <Card className="p-8 text-center h-48 flex flex-col justify-center">
-            <CardContent className="p-0">
-              <div className="mb-6">
-                <div className={`text-2xl font-bold ${socketConnected ? 'text-success' : 'text-destructive'} mb-3`}>
-                  {socketConnected ? 'CONNECTED' : 'DISCONNECTED'}
-                </div>
-              </div>
-              <p className="text-muted-foreground font-bold text-lg">SYSTEM CONNECTION</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="p-8 text-center h-48 flex flex-col justify-center">
-            <CardContent className="p-0">
-              <div className="mb-6">
+            <CardContent className="p-0 flex flex-col items-center">
+              <div className="flex flex-col items-center space-y-4">
                 <div className={`text-2xl font-bold ${
                   cameraStatus?.connected 
-                    ? 'text-green-500'  // Bright green for connected
-                    : 'text-red-500'    // Red for disconnected
-                } mb-3`}>
+                    ? 'text-green-500'
+                    : 'text-red-500'
+                }`}>
                   {cameraStatus?.connected 
                     ? 'CONNECTED'
                     : 'DISCONNECTED'
                   }
                 </div>
-                <div className="space-y-1">
+                <div className="flex flex-col items-center space-y-2 max-w-[200px]">
                   {cameraStatus?.devices.map((device, index) => (
-                    <div key={index} className="text-sm text-muted-foreground">
+                    <div 
+                      key={index} 
+                      className={`text-sm text-muted-foreground px-4 py-1 rounded-full ${
+                        device.active ? 'bg-green-100' : 'bg-gray-100'
+                      }`}
+                    >
                       {device.device}: {device.active ? 'Active' : 'Inactive'}
                     </div>
                   ))}
                 </div>
               </div>
-              <p className="text-muted-foreground font-bold text-lg">CAMERA STATUS</p>
+              <p className="text-muted-foreground font-bold text-lg mt-4">CAMERA STATUS</p>
             </CardContent>
           </Card>
-          
-          <Card 
-            className="p-8 text-center h-48 flex flex-col justify-center bg-info text-white cursor-pointer hover:bg-info/90 transition-colors"
-            onClick={() => setShowPassword(true)}
-          >
-            <CardContent className="p-0">
-              <div className="mb-6">
-                <div className="flex items-center justify-center gap-3 mb-3">
-                  <Zap className="w-6 h-6 text-destructive" />
-                  <span className="text-xl font-bold">CHARGING</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>        <div className="grid grid-cols-2 gap-6 mb-8">
+        </div>
+
+        <div className="grid grid-cols-2 gap-6">
           <Card className="p-8 text-center h-48 flex flex-col justify-center">
             <CardContent className="p-0">
               <div className="mb-6">
@@ -255,21 +236,18 @@ const SystemStatus = () => {
             </CardContent>
           </Card>
         </div>
-        
-        <div className="flex justify-end">
-          <button 
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-            onClick={() => setShowQRModal(true)}
-          >
-            <QrCode className="w-4 h-4" />
-            QR FOR PRIVACY POLICY
-          </button>
-        </div>
       </div>
       
       <BottomNav />
       
-      <Dialog open={showQRModal} onOpenChange={setShowQRModal}>
+      <PasswordDialog
+        open={showPassword}
+        onClose={() => setShowPassword(false)}
+        onSuccess={handlePasswordSuccess}
+      />
+      
+      {/* Keep QR modal component but hidden by default */}
+      <Dialog open={false} onOpenChange={setShowQRModal}>
         <DialogContent className="max-w-md mx-auto bg-card border border-border rounded-lg">
           <DialogHeader>
             <DialogTitle className="text-center text-lg font-bold mb-4">
@@ -279,85 +257,12 @@ const SystemStatus = () => {
           <div className="flex justify-center p-8">
             <div className="w-64 h-64 bg-white rounded-lg p-4 flex items-center justify-center">
               <svg viewBox="0 0 200 200" className="w-full h-full">
-                <defs>
-                  <pattern id="qrPattern" patternUnits="userSpaceOnUse" width="10" height="10">
-                    <rect width="10" height="10" fill="white"/>
-                  </pattern>
-                </defs>
-                {/* QR Code pattern - simplified representation */}
-                <rect x="0" y="0" width="40" height="40" fill="black"/>
-                <rect x="160" y="0" width="40" height="40" fill="black"/>
-                <rect x="0" y="160" width="40" height="40" fill="black"/>
-                <rect x="10" y="10" width="20" height="20" fill="white"/>
-                <rect x="170" y="10" width="20" height="20" fill="white"/>
-                <rect x="10" y="170" width="20" height="20" fill="white"/>
-                <rect x="15" y="15" width="10" height="10" fill="black"/>
-                <rect x="175" y="15" width="10" height="10" fill="black"/>
-                <rect x="15" y="175" width="10" height="10" fill="black"/>
-                
-                {/* Random QR pattern blocks */}
-                <rect x="50" y="20" width="10" height="10" fill="black"/>
-                <rect x="70" y="20" width="10" height="10" fill="black"/>
-                <rect x="90" y="20" width="10" height="10" fill="black"/>
-                <rect x="110" y="20" width="10" height="10" fill="black"/>
-                <rect x="130" y="20" width="10" height="10" fill="black"/>
-                
-                <rect x="50" y="40" width="10" height="10" fill="black"/>
-                <rect x="80" y="40" width="10" height="10" fill="black"/>
-                <rect x="120" y="40" width="10" height="10" fill="black"/>
-                
-                <rect x="60" y="60" width="10" height="10" fill="black"/>
-                <rect x="90" y="60" width="10" height="10" fill="black"/>
-                <rect x="110" y="60" width="10" height="10" fill="black"/>
-                <rect x="140" y="60" width="10" height="10" fill="black"/>
-                
-                <rect x="50" y="80" width="10" height="10" fill="black"/>
-                <rect x="80" y="80" width="10" height="10" fill="black"/>
-                <rect x="100" y="80" width="10" height="10" fill="black"/>
-                <rect x="130" y="80" width="10" height="10" fill="black"/>
-                <rect x="150" y="80" width="10" height="10" fill="black"/>
-                
-                <rect x="70" y="100" width="10" height="10" fill="black"/>
-                <rect x="90" y="100" width="10" height="10" fill="black"/>
-                <rect x="120" y="100" width="10" height="10" fill="black"/>
-                <rect x="140" y="100" width="10" height="10" fill="black"/>
-                
-                <rect x="50" y="120" width="10" height="10" fill="black"/>
-                <rect x="80" y="120" width="10" height="10" fill="black"/>
-                <rect x="110" y="120" width="10" height="10" fill="black"/>
-                <rect x="150" y="120" width="10" height="10" fill="black"/>
-                
-                <rect x="60" y="140" width="10" height="10" fill="black"/>
-                <rect x="90" y="140" width="10" height="10" fill="black"/>
-                <rect x="130" y="140" width="10" height="10" fill="black"/>
-                
-                <rect x="50" y="160" width="10" height="10" fill="black"/>
-                <rect x="70" y="160" width="10" height="10" fill="black"/>
-                <rect x="100" y="160" width="10" height="10" fill="black"/>
-                <rect x="120" y="160" width="10" height="10" fill="black"/>
-                <rect x="150" y="160" width="10" height="10" fill="black"/>
-                
-                <rect x="60" y="180" width="10" height="10" fill="black"/>
-                <rect x="80" y="180" width="10" height="10" fill="black"/>
-                <rect x="110" y="180" width="10" height="10" fill="black"/>
-                <rect x="140" y="180" width="10" height="10" fill="black"/>
+                {/* ...existing QR code SVG... */}
               </svg>
-            </div>
-          </div>
-          <div className="text-center pb-4">
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <QrCode className="w-4 h-4" />
-              QR FOR PRIVACY POLICY
             </div>
           </div>
         </DialogContent>
       </Dialog>
-      
-      <PasswordDialog
-        open={showPassword}
-        onClose={() => setShowPassword(false)}
-        onSuccess={handlePasswordSuccess}
-      />
     </div>
   );
 };
