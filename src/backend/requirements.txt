@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+screen-brightness-control
+pyalsaaudio
+pydantic
+python-socketio

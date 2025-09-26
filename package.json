@@ -1,0 +1,132 @@
+{
+  "name": "vite_react_shadcn_ts",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Guard Controls desktop application",
+  "author": "Your Name <you@example.com>",
+  "type": "module",
+  "main": "electron.mjs",
+  "scripts": {
+    "dev": "bash -c 'echo \"🎤 Starting development environment with VoIP...\"; echo \"🔍 Checking for existing VoIP processes...\"; if ps aux | grep \"node index.js --listen 3333\" | grep -v grep; then echo \"⚠️ VoIP already running, stopping it first...\"; pkill -f \"node index.js --listen 3333\"; sleep 2; fi; echo \"🚀 Starting fresh VoIP listener...\"; cd ~/tvoip && echo \"📁 Working directory: $(pwd)\"; echo \"🎵 Audio command: node index.js --listen 3333 --input hw:2,0 --output hw:2,0\"; nohup node index.js --listen 3333 --input hw:2,0 --output hw:2,0 > voip.log 2>&1 & VOIP_PID=$!; echo \"✅ VoIP started with PID: $VOIP_PID\"; sleep 3; echo \"🔍 Verifying VoIP is running...\"; if ps aux | grep \"node index.js --listen 3333\" | grep -v grep; then echo \"✅ VoIP confirmed running\"; else echo \"❌ VoIP failed to start, check logs\"; fi; echo \"📋 Recent VoIP logs:\"; tail -5 voip.log 2>/dev/null || echo \"No logs yet\"; echo \"🌐 Starting Vite dev server...\"; cd /home/jetson/Desktop/guard && vite'",
+    "dev:vite-only": "vite",
+    "dev:no-voip": "vite",
+    "voip:start": "bash -c 'cd ~/tvoip && echo \"🎤 Starting VoIP service on port 3333...\" && node index.js --listen 3333 --input hw:2,0 --output hw:2,0'",
+    "voip:start-bg": "bash -c 'cd ~/tvoip && echo \"🎤 Starting VoIP service in background...\" && nohup node index.js --listen 3333 --input hw:2,0 --output hw:2,0 > voip.log 2>&1 & echo \"✅ VoIP started in background\"'",
+    "voip:stop": "bash -c 'echo \"🛑 Stopping VoIP service...\" && pkill -f \"node index.js --listen 3333\" && echo \"✅ VoIP service stopped\"'",
+    "voip:status": "bash -c 'if ps aux | grep \"node index.js --listen 3333\" | grep -v grep > /dev/null; then echo \"✅ VoIP service is running\"; ps aux | grep \"node index.js --listen 3333\" | grep -v grep; else echo \"❌ VoIP service is not running\"; fi'",
+    "voip:logs": "bash -c 'echo \"📋 VoIP logs:\" && tail -f ~/tvoip/voip.log'",
+    "voip:test": "bash -c 'echo \"🧪 Testing VoIP configuration...\"; echo \"📡 Port 3333 status:\"; netstat -an | grep 3333 || echo \"Port 3333 not listening\"; echo \"🔊 Audio devices:\"; echo \"Input: hw:2,0\" && arecord -D hw:2,0 -d 1 -f cd /tmp/test.wav 2>/dev/null && echo \"✅ Input working\" || echo \"❌ Input failed\"; echo \"Output: hw:2,0\" && aplay -D hw:2,0 /tmp/test.wav 2>/dev/null && echo \"✅ Output working\" || echo \"❌ Output failed\"; rm -f /tmp/test.wav 2>/dev/null'",
+    "dev:debug": "bash -c 'echo \"🔍 Debug mode - showing all processes and audio info\"; npm run voip:test; echo \"🎤 Starting VoIP in foreground for debugging...\"; cd ~/tvoip && node index.js --listen 3333 --input hw:2,0 --output hw:2,0'",
+    "backend": "cd src/backend && uvicorn main:app --reload --port 5000",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "electron-dev": "cross-env NODE_ENV=development npm run build && npx electron .",
+    "electron:dev": "concurrently --kill-others \"cross-env BROWSER=none npm run dev:vite-only\" \"wait-on tcp:8081 && electron .\"",
+    "build:backend": "rm -rf resources/app && mkdir -p resources/app && ./guard-env/bin/pyinstaller -y src/backend/main.spec && cp -r dist/main resources/app/main",
+    "electron:build": "npm run build && npm run build:backend && electron-builder",
+    "electron:preview": "electron .",
+    "package": "cross-env NODE_ENV=production npm run build && npm run build:backend && electron-builder build --linux"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
+    "@radix-ui/react-accordion": "^1.2.11",
+    "@radix-ui/react-alert-dialog": "^1.1.14",
+    "@radix-ui/react-aspect-ratio": "^1.1.7",
+    "@radix-ui/react-avatar": "^1.1.10",
+    "@radix-ui/react-checkbox": "^1.3.2",
+    "@radix-ui/react-collapsible": "^1.1.11",
+    "@radix-ui/react-context-menu": "^2.2.15",
+    "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-dropdown-menu": "^2.1.15",
+    "@radix-ui/react-hover-card": "^1.1.14",
+    "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-menubar": "^1.1.15",
+    "@radix-ui/react-navigation-menu": "^1.2.13",
+    "@radix-ui/react-popover": "^1.1.14",
+    "@radix-ui/react-progress": "^1.1.7",
+    "@radix-ui/react-radio-group": "^1.3.7",
+    "@radix-ui/react-scroll-area": "^1.2.9",
+    "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-separator": "^1.1.7",
+    "@radix-ui/react-slider": "^1.3.5",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-switch": "^1.0.3",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-toast": "^1.1.4",
+    "@radix-ui/react-toggle": "^1.0.3",
+    "@radix-ui/react-toggle-group": "^1.0.4",
+    "@radix-ui/react-tooltip": "^1.0.6",
+    "@tanstack/react-query": "^5.87.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.0.0",
+    "cmdk": "^1.1.1",
+    "embla-carousel-react": "^8.0.0-rc12",
+    "lucide-react": "^0.274.0",
+    "next-themes": "^0.4.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.4",
+    "react-resizable-panels": "^0.0.55",
+    "react-router-dom": "^6.15.0",
+    "socket.io-client": "^4.8.1",
+    "sonner": "^0.7.0",
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.2",
+    "wait-on": "^8.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.9",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.6.0",
+    "@typescript-eslint/parser": "^6.6.0",
+    "@vitejs/plugin-react": "^4.0.4",
+    "@vitejs/plugin-react-swc": "^3.11.0",
+    "autoprefixer": "^10.4.15",
+    "concurrently": "^9.2.1",
+    "cross-env": "^7.0.3",
+    "electron": "^38.1.2",
+    "electron-builder": "^26.0.12",
+    "eslint": "^8.48.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "lovable-tagger": "^1.1.9",
+    "postcss": "^8.4.29",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.2.2",
+    "vite": "^5.4.20"
+  },
+  "build": {
+  "appId": "com.sakar.guard",
+  "productName": "Guard Controls",
+  "files": [
+    "dist/**",
+    "electron.mjs",
+    "preload.js",
+    "package.json"
+  ],
+  "extraFiles": [
+    {
+      "from": "resources/app/main",
+      "to": "app/main"
+    }
+  ],
+  "asar": false,
+  "linux": {
+    "target": ["AppImage"],
+    "category": "Utility"
+  },
+  "directories": {
+    "buildResources": "public"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true
+  }
+}
+
+
+}
