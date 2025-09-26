@@ -58,3 +58,4 @@ Thumbs.db
 *.mp3
 *.ogg
 voip.log
+release/linux-unpacked/
