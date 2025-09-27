@@ -14,19 +14,19 @@ const QROverlay: React.FC<QROverlayProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg relative max-w-md w-full mx-4">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+      <div className="bg-background p-8 rounded-lg shadow-lg relative max-w-md w-full mx-4">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
+          className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
         >
           <X size={24} />
         </button>
-        <div className="space-y-4">
-          <h4 className="text-xl font-semibold text-center">Scan QR Code</h4>
-          <div className="flex justify-center">
+        <div className="space-y-6">
+          <h4 className="text-xl font-semibold text-center">Scan QR Code to Report Issue</h4>
+          <div className="flex flex-col items-center bg-white p-4 rounded-lg">
             <img
-              src="/qrcode_www.sakarrobotics.com.png"
+              src="qrcode_www.sakarrobotics.com.png"
               alt="Report Issue QR Code"
               className="w-64 h-64 object-contain"
             />
@@ -308,7 +308,7 @@ Robot Health:
           </Accordion>
         </div>
       </div>
-      <QROverlay isOpen={false} onClose={() => setIsQROpen(false)} />
+      <QROverlay isOpen={isQROpen} onClose={() => setIsQROpen(false)} />
     </SettingsLayout>
   );
 };

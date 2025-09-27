@@ -1,10 +1,14 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { spawn } from 'child_process';
 import path, { join } from 'path';
 import waitOn from 'wait-on';
 import net from 'net';
 import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
+import { exec } from 'child_process';
+import util from 'util';
+import fs from 'fs/promises';
+const execAsync = util.promisify(exec);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,11 +47,6 @@ async function getFreePort(startPort) {
   return port;
 }
 
-/**
- * Start FastAPI backend
- * - Dev → run uvicorn inside virtualenv
- * - Prod → run compiled binary (`main`)
- */
 /**
  * Start FastAPI backend
  * - Dev → run uvicorn inside virtualenv
@@ -270,54 +269,30 @@ async function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       preload: preloadPath,
-      devTools: false, // Disable dev tools
+      devTools: true, // Temporarily enable for debugging
+      webSecurity: true
     },
     show: false, // Don't show until ready
   });
 
   try {
-  let frontendURL;
-  if (process.env.NODE_ENV === 'development') {
-    frontendURL = await startVite();
-    console.log('Loading development frontend URL...');
-    await mainWindow.loadURL(frontendURL);
-  } else {
-    // In production, load the built frontend files using loadFile (like the working example)
-    const htmlPath = path.join(__dirname, 'dist', 'index.html');
-    console.log('Frontend HTML path:', htmlPath);
-    console.log('HTML file exists:', existsSync(htmlPath));
-    console.log('Loading production frontend file...');
-    await mainWindow.loadFile(htmlPath);
-  }
+    let frontendURL;
+    if (process.env.NODE_ENV === 'development') {
+      frontendURL = await startVite();
+      console.log('Loading development frontend URL:', frontendURL);
+      await mainWindow.loadURL(frontendURL);
+    } else {
+      // In production, load the built frontend files
+      const indexPath = path.join(__dirname, 'dist', 'index.html');
+      console.log('Loading production index path:', indexPath);
+      await mainWindow.loadFile(indexPath);
+    }
     
-    // Show window and open dev tools for debugging
     mainWindow.show();
-    mainWindow.webContents.openDevTools();
-    
-    // Add event listeners for debugging
-    mainWindow.webContents.on('did-finish-load', () => {
-      console.log('Page finished loading');
-    });
-    
-    mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
-      console.error('Page failed to load:', errorCode, errorDescription);
-    });
-    
-    mainWindow.webContents.on('console-message', (event, level, message) => {
-      console.log('Renderer console:', level, message);
-    });
-  } catch (err) {
-    console.error('Frontend did not start in time:', err);
+  } catch (error) {
+    console.error('Failed to load frontend:', error);
+    app.quit();
   }
-
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.webContents.openDevTools();
-  }
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-    cleanup();
-  });
 }
 
 /**
@@ -336,6 +311,25 @@ function cleanup() {
     tvoipProcess.kill();
     tvoipProcess = null;
   }
+}
+
+/**
+ * Get the display name for xrandr
+ */
+async function getDisplayName() {
+  return new Promise((resolve) => {
+    const xrandr = spawn('xrandr', ['--current']);
+    let output = '';
+    
+    xrandr.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+    
+    xrandr.on('close', () => {
+      const match = output.match(/^(\S+) connected/m);
+      resolve(match ? match[1] : 'eDP-1'); // Default to eDP-1 if no match
+    });
+  });
 }
 
 /**
@@ -375,6 +369,70 @@ app.whenReady().then(async () => {
   });
   
   console.log('App setup complete');
+});
+
+// Add these handlers before createWindow()
+ipcMain.handle('get-brightness', async () => {
+  try {
+    const maxBrightness = parseInt(await fs.readFile('/sys/class/backlight/nvidia_wmi_ec_backlight/max_brightness', 'utf8'));
+    const currentBrightness = parseInt(await fs.readFile('/sys/class/backlight/nvidia_wmi_ec_backlight/brightness', 'utf8'));
+    return Math.round((currentBrightness / maxBrightness) * 100);
+  } catch (error) {
+    console.error('Error getting brightness:', error);
+    return 80; // default brightness
+  }
+});
+
+ipcMain.handle('set-brightness', async (event, level) => {
+  try {
+    const maxBrightness = parseInt(await fs.readFile('/sys/class/backlight/nvidia_wmi_ec_backlight/max_brightness', 'utf8'));
+    const newBrightness = Math.round((level / 100) * maxBrightness);
+    
+    // Try to write directly first
+    try {
+      await fs.writeFile('/sys/class/backlight/nvidia_wmi_ec_backlight/brightness', newBrightness.toString());
+      return true;
+    } catch (writeError) {
+      // If permission denied, try using sudo
+      if (writeError.code === 'EACCES') {
+        await new Promise((resolve, reject) => {
+          exec(`echo ${newBrightness} | sudo tee /sys/class/backlight/nvidia_wmi_ec_backlight/brightness`, (error) => {
+            if (error) reject(error);
+            else resolve();
+          });
+        });
+        return true;
+      }
+      throw writeError;
+    }
+  } catch (error) {
+    console.error('Error setting brightness:', error);
+    return false;
+  }
+});
+
+// Add brightness control handlers
+ipcMain.handle('brightness:get', async () => {
+  try {
+    const { stdout: currentOut } = await execAsync('sudo brightnessctl get');
+    const { stdout: maxOut } = await execAsync('sudo brightnessctl max');
+    const current = parseInt(currentOut.trim());
+    const max = parseInt(maxOut.trim());
+    return Math.round((current / max) * 100);
+  } catch (error) {
+    console.error('Error getting brightness:', error);
+    return 50;
+  }
+});
+
+ipcMain.handle('brightness:set', async (event, value) => {
+  try {
+    await execAsync(`sudo brightnessctl set ${value}%`);
+    return true;
+  } catch (error) {
+    console.error('Error setting brightness:', error);
+    return false;
+  }
 });
 
 // Quit everything when all windows are closed

@@ -1,17 +1,26 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
+import react from "@vitejs/plugin-react";
+import { resolve } from "path";
+import path from 'path';
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // Set base to './' for Electron builds to generate relative paths
-  base: mode === 'production' ? './' : '/',
+  // Always use relative paths
+  base: './',
   build: {
     // Ensure proper build output for Electron
     outDir: 'dist',
     assetsDir: 'assets',
+    // Ensure assets are copied to dist
+    copyPublicDir: true,
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+      },
+    },
   },
+  publicDir: 'public',
   server: {
     host: "127.0.0.1", // Only listen on localhost
     port: 8080,

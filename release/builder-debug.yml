@@ -1,9 +1,9 @@
 x64:
   firstOrDefaultFilePatterns:
     - '!**/node_modules/**'
-    - '!public{,/**/*}'
+    - '!build{,/**/*}'
     - '!release{,/**/*}'
-    - dist/**
+    - dist/**/*
     - electron.mjs
     - preload.js
     - package.json
@@ -16,7 +16,7 @@ x64:
     - '!.yarnrc.yml'
   nodeModuleFilePatterns:
     - '**/*'
-    - dist/**
+    - dist/**/*
     - electron.mjs
     - preload.js
     - package.json

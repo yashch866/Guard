@@ -6,7 +6,16 @@ import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { useToast } from "@/components/ui/use-toast";
 
-const DEVICE_IP = "http://localhost:5000"; // Points to your own laptop
+declare global {
+  interface Window {
+    system: {
+      brightness: {
+        get: () => Promise<number>;
+        set: (value: number) => Promise<boolean>;
+      }
+    }
+  }
+}
 
 const Display = () => {
   const [brightness, setBrightness] = useState([80]); // slider default
@@ -44,55 +53,38 @@ const Display = () => {
     { id: "dark", label: "DARK", icon: Moon },
   ];
 
-  // 🔹 Fetch current brightness on page load
+  // Fetch current brightness on page load
   useEffect(() => {
     const fetchBrightness = async () => {
       try {
-        const res = await fetch(`${DEVICE_IP}/display/brightness`);
-        if (!res.ok) {
-          const txt = await res.text();
-          throw new Error(`API returned ${res.status}: ${txt}`);
-        }
-        const data = await res.json();
-        if (typeof data.brightness === "number") {
-          setBrightness([data.brightness]);
-        } else {
-          throw new Error(data.error || "Brightness not available");
-        }
+        const level = await window.system.brightness.get();
+        setBrightness([level]);
       } catch (err) {
         console.error("Failed to fetch brightness:", err);
         toast({
           variant: "destructive",
           title: "Failed to fetch brightness",
-          description:
-            err instanceof Error ? err.message : "Backend not reachable",
+          description: err instanceof Error ? err.message : "Could not get screen brightness",
         });
       }
     };
     fetchBrightness();
   }, []);
 
-  // 🔹 Update brightness live as slider moves
+  // Update brightness live as slider moves
   const handleBrightnessChange = async (val: number[]) => {
     setBrightness(val);
     try {
-      const res = await fetch(`${DEVICE_IP}/display/brightness/${val[0]}`, {
-        method: "POST",
-      });
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(`API returned ${res.status}: ${txt}`);
-      }
-      const data = await res.json().catch(() => ({} as any));
-      if (data.status === "failed") {
-        throw new Error(data.error || "Failed to set brightness");
+      const success = await window.system.brightness.set(val[0]);
+      if (!success) {
+        throw new Error("Failed to set brightness");
       }
     } catch (err) {
       console.error("Failed to set brightness:", err);
       toast({
         variant: "destructive",
         title: "Failed to set brightness",
-        description: err instanceof Error ? err.message : "Unknown error",
+        description: err instanceof Error ? err.message : "Could not set screen brightness",
       });
     }
   };

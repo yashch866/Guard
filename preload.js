@@ -1,5 +1,8 @@
-const { contextBridge } = require("electron");
+const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld("electronAPI", {
-  // can add IPC handlers later
+contextBridge.exposeInMainWorld('system', {
+  brightness: {
+    get: () => ipcRenderer.invoke('brightness:get'),
+    set: (value) => ipcRenderer.invoke('brightness:set', value)
+  }
 });
