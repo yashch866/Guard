@@ -18,7 +18,7 @@ declare global {
 }
 
 const Display = () => {
-  const [brightness, setBrightness] = useState([80]); // slider default
+  const [brightness, setBrightness] = useState([100]); // always 100%
   const { theme, setTheme, resolvedTheme } = useTheme();
   const { toast } = useToast();
 
@@ -71,23 +71,7 @@ const Display = () => {
     fetchBrightness();
   }, []);
 
-  // Update brightness live as slider moves
-  const handleBrightnessChange = async (val: number[]) => {
-    setBrightness(val);
-    try {
-      const success = await window.system.brightness.set(val[0]);
-      if (!success) {
-        throw new Error("Failed to set brightness");
-      }
-    } catch (err) {
-      console.error("Failed to set brightness:", err);
-      toast({
-        variant: "destructive",
-        title: "Failed to set brightness",
-        description: err instanceof Error ? err.message : "Could not set screen brightness",
-      });
-    }
-  };
+  // Brightness is read-only, no handler needed
 
   return (
     <SettingsLayout>
@@ -121,9 +105,9 @@ const Display = () => {
           <h3 className="text-xl font-bold">BRIGHTNESS</h3>
           <Slider
             value={brightness}
-            onValueChange={handleBrightnessChange}
             max={100}
             step={1}
+            disabled
             className="w-full"
           />
           <p className="text-sm text-muted-foreground">

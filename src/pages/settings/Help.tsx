@@ -23,11 +23,11 @@ const QROverlay: React.FC<QROverlayProps> = ({ isOpen, onClose }) => {
           <X size={24} />
         </button>
         <div className="space-y-6">
-          <h4 className="text-xl font-semibold text-center">Scan QR Code to Report Issue</h4>
+          <h4 className="text-xl font-semibold text-center">Scan QR Code to Contact Us</h4>
           <div className="flex flex-col items-center bg-white p-4 rounded-lg">
             <img
               src="qrcode_www.sakarrobotics.com.png"
-              alt="Report Issue QR Code"
+              alt="Contact Us QR Code"
               className="w-64 h-64 object-contain"
             />
           </div>
@@ -41,212 +41,167 @@ const Help = () => {
   const [isQROpen, setIsQROpen] = useState(false);
   
   const helpSections = {
-    "Introduction": "Guard is an intelligent surveillance robot built for real-time monitoring, security, and situational awareness. With advanced sensors, AI-powered vision, and autonomous mobility, Guard serves as a mobile security unit capable of detecting, analyzing, and reporting potential threats. \n This dedicated Guard Dashboard provides direct access to the robot’s operational status and system diagnostics. While the primary command center coordinates overall security operations, this interface gives you focused control and insights into Guard’s performance — ensuring reliable monitoring, quick response, and seamless integration into larger security workflows.",
+    "Introduction": "Guard is an intelligent surveillance robot built for real-time monitoring, security, and situational awareness. With advanced sensors, AI-powered vision, and autonomous mobility, Guard serves as a mobile security unit capable of detecting, analyzing, and reporting potential threats.\n\nThis Guard Dashboard provides direct access to the robot's operational status, settings configuration, and system diagnostics. The interface is designed for easy monitoring and control, giving you focused insights into Guard's performance and seamless integration into your security workflows.",
     
-    "Getting Started / Basics": "Let's get you started with the basics:\n\nStarting Your Day:\n- Make sure the robot is charged\n- Check if it's connected to WiFi\n- Look at the screen to see if everything is OK\n\nUsing The Robot:\n- Press buttons on screen to start patrols\n- Watch the camera feed to see what robot sees\n- Use the voice button to talk through robot\n\nIf Things Go Wrong:\n- Go to Settings > General and use the Reboot button\n- Make sure WiFi is working\n- Check if battery needs charging\n\nMost problems can be fixed with a quick reboot - just go to Settings > General section and click the Reboot button!",
+    "Getting Started / Basics": "Welcome to the Guard Dashboard! Here's how to get started:\n\nDashboard Overview:\n- See the current date and time in the header\n- Check network connection status (ONLINE/OFFLINE/NO INTERNET)\n- View recording status indicator\n- Use the large talk button for voice communication\n\nDaily Operation:\n- Monitor connection status in the header\n- Use push-to-talk for voice communication\n- Check system status via the bottom navigation\n- Access settings for customization\n\nNavigation:\n- Home: Main dashboard with talk button\n- Settings: Configure display themes, volume, WiFi, and general settings\n- System Status: View camera status and temperature monitoring",
     
-    "Features & Controls": `Core System Capabilities:
+    "Features & Controls": `Dashboard Features:
 
-1. Security Monitoring
-   • Live threat detection
-   • Automated incident recording
-   • Instant alert notifications
-   • Real-time situation analysis
-   • Event history tracking
+1. Header Status Bar
+   • Company logo display (Sakar)
+   • Real-time date and time display
+   • Connection status indicator (ONLINE/OFFLINE/NO INTERNET)
+   • Recording status indicator (always shows RECORDING)
 
-2. Environment Awareness
-   • Area mapping system
-   • Obstacle detection
-   • Environmental conditions
-   • Lighting adaptation
-   • Movement tracking
+2. Communication System
+   • Large Talk Button (Push-to-Talk)
+     - Red when OFF (MIC OFF): Press to start talking
+     - Green when ON (MIC ON): Press to stop talking
+     - Voice chat server connection status display
+     - Connection test button when disconnected
 
-3. Communication System
-   • Voice Control (PTT)
-     - Press once to activate microphone
-     - Press again to deactivate
-     - LED status indicator shows active state
-     - Visual feedback on dashboard
-   • Audio Management
-     - Interactive volume control
-     - Microphone sensitivity adjustment
-     - Noise reduction settings
-     - Echo cancellation options
-   • Team Collaboration
-     - Multi-user access control
-     - Shift handover tools
-     - Team communication
-     - Activity logging
+3. Bottom Navigation
+   • Home: Returns to main dashboard
+   • Settings: Access configuration options
+   • System Status: View system health information
 
-4. Patrol Operation
-   • One-click patrol activation
-   • Pre-programmed route selection
-   • Real-time route modification
-   • Patrol speed adjustment
-   • Position tracking display
-
-5. Surveillance Tools
-   • HD video monitoring
-   • Night vision toggle
-   • Motion detection system
-   • Threat level indicators
-   • Automated recording
-
-6. Interactive Controls
-   • Simple directional controls
-   • Camera angle adjustment
-   • Zoom level selection
-   • Light intensity control
-   • Quick stop function`,
+4. Settings Sections Available
+   • Display: Theme selection (Auto/Light/Dark) and brightness display
+   • Audio: Volume control with mute/unmute functionality
+   • WiFi: Network configuration and connection management
+   • General: System settings and information
+   • About: Version information and details
+   • Help: This help documentation`,
     
+    "Settings & Configuration": `Available Settings Sections:
 
+1. Display Settings
+   • Theme Selection
+     - Auto: Automatically switches between light/dark based on time
+     - Light: Always use light theme
+     - Dark: Always use dark theme
+   • Brightness Display
+     - Shows current screen brightness level
+     - Read-only brightness indicator (fixed at 100%)
+
+2. Audio Settings
+   • Volume Control
+     - System volume adjustment
+     - Real-time volume slider
+     - Audio output level control
+   • Communication Settings
+     - Talk button configuration
+     - Audio quality preferences
+
+3. Network Settings
+   • WiFi Configuration
+     - Available network display
+     - Connection strength monitoring
+     - Network status indicators
+   • Connection Management
+     - Network troubleshooting
+     - Signal quality monitoring
+
+4. System Information
+   • Robot Status Overview
+   • System Health Monitoring
+   • Version Information
+   • Performance Indicators`,
+
+    "System Status & Monitoring": `System Status Page Features:
+
+1. Camera Status Card
+   • CONNECTED/DISCONNECTED status display
+   • Lists all camera devices and their status
+   • Shows Active/Inactive state for each device
+   • Real-time camera connection monitoring
+
+2. Temperature Monitoring
+   • CPU Temperature Card
+     - Real-time CPU temperature in Celsius
+     - Status indicators: Normal/Warm/High
+     - Temperature thresholds for warnings
+   • GPU Temperature Card
+     - Real-time GPU temperature monitoring
+     - Status indicators for thermal health
+     - Overheating warnings when needed
+
+3. Connection Status (in Header)
+   • ONLINE: Full internet connectivity
+   • NO INTERNET: WiFi connected but no internet access
+   • OFFLINE: No network connection
+   • Recording indicator (always active)
+
+4. System Notifications
+   • Toast notifications for status changes
+   • Camera connection/disconnection alerts
+   • System connection status updates
+   • Error messages for troubleshooting`,
     
-    "Settings & Configuration": `System Optimization Guide:
+    "Troubleshooting Guide": `Common Issues and Solutions:
 
-1. Patrol Configuration
-   • Coverage area setup
-   • Patrol route planning
-   • Schedule management
-   • Alert threshold settings
-   • Response time targets
+1. Connection Problems
+   • Check WiFi signal strength indicator
+   • Verify network settings in Settings > Network
+   • Ensure robot is within WiFi range
+   • Contact support if issues persist
 
-2. Security Settings
-   • Detection sensitivity
-   • Recording preferences
-   • Alert criteria setup
-   • Access permissions
-   • Emergency protocols
+2. Video Feed Issues
+   • Check connection status indicator
+   • Verify camera is not obstructed
+   • Test network bandwidth
+   • Try refreshing the dashboard
 
-3. Performance Tuning
-   • Battery optimization
-   • Network prioritization
-   • Sensor calibration
-   • System backup plans
-   • Update management`,
+3. Audio Communication Problems
+   • Check volume settings in Settings > Audio
+   • Test talk button functionality
+   • Verify microphone permissions
+   • Check speaker output levels
 
-    "System Status & Maintenance": `System Health and Care Guide:
-
-1. System Status Overview
-Battery Life:
-   • Real-time charge level monitoring
-   • Charging status indicators
-   • Low battery warnings
-   • Power consumption tracking
-
-Network Connection:
-   • WiFi connection status
-   • Signal strength monitoring
-   • Communication capability
-   • Network health indicators
-
-Robot Health:
-   • System status monitoring
-   • Component health tracking
-   • Maintenance indicators
-   • Reboot requirements
-
-2. Daily Maintenance
-   • Physical inspection steps
-   • Sensor cleaning process
-   • Battery maintenance
-   • System checks routine
-   • Performance validation
-
-3. Software Management
-   • Update installation
-   • Version tracking
-   • Backup procedures
-   • Recovery options
-   • System optimization
-
-4. Long-term Care
-   • Preventive maintenance
-   • Component tracking
-   • Wear monitoring
-   • Service scheduling
-   • Health reports`,
+4. Performance Issues
+   • Monitor system status indicators
+   • Check network connection stability
+   • Verify all systems are operational
+   • Contact support for persistent issues`,
     
-    "Troubleshooting Guide": "If you're having problems, try these simple fixes first:\n\nStep 1: Reboot the Robot\n- Go to Settings menu\n- Click on 'General' section\n- Find and click the 'Reboot' button\n- Wait for the robot to fully restart (about 2 minutes)\n\nStep 2: Check Basic Things\n- Make sure the robot has enough battery power\n- Check if you're connected to WiFi\n- Make sure nothing is blocking the robot's sensors\n\nStep 3: Still Having Problems?\n- Try the reboot button in Settings > General again\n- Contact support if problems continue\n\nRemember: Most problems can be fixed by using the Reboot button in the General section of Settings!",
-    
-    "Safety & Emergency": `Safety and Emergency Procedures:
+    "FAQs": `Frequently Asked Questions:
 
-1. Emergency Response
-   • Immediate stop activation
-   • Emergency override controls
-   • Fail-safe engagement
-   • Alert system activation
-   • Quick evacuation paths
+Q: How do I use the talk button?
+A: Press the large red button to turn the microphone ON (green). Press again to turn it OFF (red). The button shows MIC OFF/MIC ON status clearly.
 
-2. Hazard Prevention
-   • Obstacle detection zones
-   • Collision avoidance
-   • Safety boundary setup
-   • Speed limit controls
-   • Area restriction rules
+Q: What do the connection status indicators mean?
+A: ONLINE = Full internet connection, NO INTERNET = WiFi connected but no web access, OFFLINE = No network connection.
 
-3. Safety Monitoring
-   • Real-time status checks
-   • Environmental scanning
-   • Personnel detection
-   • Hazard identification
-   • Safety zone alerts
+Q: Can I change the theme?
+A: Yes! Go to Settings > Display and choose from Auto, Light, or Dark themes. Auto automatically switches between light and dark based on time of day.
 
-4. Crisis Management
-   • Incident assessment
-   • Response coordination
-   • Damage control steps
-   • Team mobilization
-   • Communication plan
+Q: How do I adjust the volume?
+A: Go to Settings > Audio. You'll find a volume slider and mute/unmute button to control system audio levels.
 
-5. Recovery Operations
-   • System restoration
-   • Damage assessment
-   • Status reporting
-   • Safety verification
-   • Normal operations restart`,
-    
-    "FAQs": `Quick Reference Guide:
+Q: What does the recording indicator mean?
+A: The red "RECORDING" indicator in the header shows that the system is actively recording audio/video for security purposes.
 
-1. Common Operations
-   • Starting patrols
-   • Emergency handling
-   • Battery management
-   • System monitoring
-   • Alert response
+Q: How can I check if the camera is working?
+A: Go to System Status (info icon in bottom navigation) to see camera connection status and active devices.
 
-2. Technical Support
-   • Basic troubleshooting
-   • Update installation
-   • Network setup
-   • System recovery
-   • Performance tips
+Q: Where can I find WiFi settings?
+A: Navigate to Settings > WiFi to view network status, connection information, and manage WiFi connections.
 
-3. Maintenance Tips
-   • Daily checklist
-   • Cleaning guide
-   • Regular upkeep
-   • Service intervals
-   • Component care`
+Q: What are the temperature readings for?
+A: System Status shows CPU and GPU temperatures to monitor system health and prevent overheating.
+
+Q: How do I get technical support?
+A: Use the "Contact Us (QR)" button in the Help section to scan the QR code and reach our support team.`
   };
 
   const issueTypes = {
-    "Connection / Network Problem": "Follow these steps to diagnose and resolve connection issues:\n\n1. Initial Checks:\n- Verify connection icon status in header bar\n- Check WiFi signal strength indicator\n- Confirm network settings are correct\n- Test other network-dependent features\n\n2. Basic Troubleshooting:\n- Power cycle the robot system\n- Restart the control dashboard\n- Check for physical obstructions\n- Verify WiFi network availability\n\n3. Advanced Steps:\n- Run network diagnostics in settings\n- Test alternative connection methods\n- Check for system updates\n- Verify firewall settings\n\nIf problems persist after these steps, scan the QR code to report detailed connection issues. Include specific symptoms, error messages, and steps already attempted.",
+    "Connection / Network Problem": "Follow these steps to resolve connection issues:\n\n1. Check Status Indicators:\n- Look at connection status in the header (ONLINE/NO INTERNET/OFFLINE)\n- ONLINE = Full connection working properly\n- NO INTERNET = WiFi connected but no web access\n- OFFLINE = No network connection at all\n\n2. Basic Network Troubleshooting:\n- Go to Settings > WiFi to view current network status\n- Check if other devices can connect to the same network\n- Verify network password and credentials are correct\n- Ensure device is within WiFi range\n\n3. Advanced Steps:\n- Restart your router/modem\n- Check for network interference from other devices\n- Try connecting to a different network if available\n- Verify firewall settings aren't blocking the connection\n\nIf connection problems persist, use the Contact Us QR code to report the issue with specific connection status and symptoms.",
 
-    "GPS / Location Inaccuracy": "Follow this process to resolve location tracking issues:\n\n1. Environment Check:\n- Ensure clear line of sight to sky\n- Move away from tall buildings/obstacles\n- Check for interference sources\n- Verify outdoor operation\n\n2. System Diagnostics:\n- Check GPS signal strength\n- Verify satellite connection count\n- Monitor position update rate\n- Test manual position refresh\n\n3. System Reset Procedure:\n- Save current location data\n- Perform full GPS reset\n- Wait for satellite reacquisition\n- Verify position accuracy\n\nIf location remains inaccurate, scan QR code to report. Include environment details, signal strength, and number of visible satellites.", 
+    "Camera System Issues": "Resolve camera connection problems with these steps:\n\n1. Check System Status:\n- Go to System Status page (info icon in bottom navigation)\n- Look at Camera Status card - should show CONNECTED\n- Check if camera devices are listed as Active\n- Watch for system notifications about camera changes\n\n2. Basic Troubleshooting:\n- Verify connection status shows ONLINE in header\n- Check if camera hardware is properly connected\n- Ensure adequate power supply to camera system\n- Look for any physical obstructions or damage\n\n3. Advanced Steps:\n- Check system temperatures aren't too high\n- Verify network stability for camera communication\n- Try accessing dashboard from different device\n- Monitor for recurring disconnection patterns\n\nIf camera remains disconnected, contact us via QR code with camera status details and any error notifications.",
 
-    "Software / Performance Lag": "Address performance issues with these steps:\n\n1. System Health Check:\n- Monitor CPU temperature\n- Check available memory\n- Verify storage space\n- Review running processes\n\n2. Optimization Steps:\n- Close unnecessary processes\n- Clear system cache\n- Check for software updates\n- Verify cooling system operation\n\n3. Advanced Troubleshooting:\n- Run system diagnostics\n- Monitor resource usage\n- Test in safe mode\n- Check error logs\n\nIf performance issues continue, scan QR code to report. Include system temperatures, resource usage stats, and specific lag symptoms.",
+    "Audio Communication Problems": "Fix audio system issues using these steps:\n\n1. Basic Audio Checks:\n- Test volume levels in Settings > Audio\n- Verify talk button shows visual feedback when pressed\n- Check device microphone and speaker functionality\n- Ensure browser has microphone permissions\n\n2. Communication Testing:\n- Test talk button by pressing and holding\n- Listen for audio feedback through robot speakers\n- Verify two-way communication capability\n- Check for echo or feedback issues\n\n3. System Settings:\n- Adjust volume slider in audio settings\n- Test with different volume levels\n- Verify browser audio permissions\n- Check device audio output settings\n\nFor persistent audio problems, contact support via QR code with information about specific symptoms, volume levels, and communication test results.",
 
-    "Robot Control / Movement Error": "Resolution steps for movement issues:\n\n1. Safety Checks:\n- Check for physical obstacles\n- Verify surface conditions\n- Ensure safe operating space\n- Check emergency stop status\n\n2. System Diagnostics:\n- Verify motor power status\n- Check battery charge level\n- Test manual control response\n- Monitor motor temperatures\n\n3. Advanced Diagnostics:\n- Run motor diagnostics\n- Test sensor systems\n- Verify control calibration\n- Check error logs\n\nIf movement issues persist, scan QR code to report. Include specific movement symptoms, error messages, and environmental conditions.",
-
-    "System Crash / App Error": "Follow these recovery steps for system crashes:\n\n1. Immediate Actions:\n- Record any error messages\n- Save important data if possible\n- Note system state before crash\n- Check for pattern in crashes\n\n2. Recovery Steps:\n- Perform safe system restart\n- Check system logs\n- Verify software versions\n- Test basic functions\n\n3. Prevention Measures:\n- Check for updates\n- Verify system requirements\n- Monitor system resources\n- Review recent changes\n\nFor recurring crashes, scan QR code to report. Include exact error messages, crash circumstances, and frequency of occurrences.",
-
-    "Camera / Video Issue": "Resolve camera system issues with these steps:\n\n1. Hardware Checks:\n- Check for physical obstructions\n- Verify lens cleanliness\n- Check camera connections\n- Verify power supply\n\n2. Software Diagnostics:\n- Test camera initialization\n- Check video processing\n- Verify stream settings\n- Monitor frame rate\n\n3. Advanced Troubleshooting:\n- Run camera diagnostics\n- Test different resolutions\n- Check bandwidth usage\n- Verify driver status\n\nIf video issues continue, scan QR code to report. Include specific symptoms, video quality issues, and any error messages.",
-
-    "Audio Communication Problems": "Troubleshoot audio issues using these steps:\n\n1. Basic Checks:\n- Test microphone function\n- Verify speaker operation\n- Check volume settings\n- Test audio feedback\n\n2. System Settings:\n- Verify audio device selection\n- Check input/output levels\n- Test echo cancellation\n- Verify codec settings\n\n3. Advanced Diagnostics:\n- Run audio diagnostics\n- Test alternative devices\n- Check for interference\n- Monitor latency\n\nIf audio problems persist, scan QR code to report. Include specific symptoms, test results, and environmental conditions.",
-
-    "Battery / Power Issues": "Address power-related problems:\n\n1. Power Analysis:\n- Check current charge level\n- Monitor power consumption\n- Verify charging status\n- Test power supply\n\n2. System Impact:\n- Check for high-drain processes\n- Monitor temperature effects\n- Verify sleep mode function\n- Test power management\n\n3. Long-term Solutions:\n- Calibrate battery monitor\n- Check charging cycles\n- Verify battery health\n- Test backup systems\n\nFor persistent power issues, scan QR code to report. Include battery statistics, usage patterns, and specific symptoms.",
-
-    "Sensor System Failures": "Diagnose sensor issues with these steps:\n\n1. Initial Assessment:\n- Check sensor status\n- Verify physical condition\n- Test basic function\n- Monitor error states\n\n2. Diagnostic Steps:\n- Run sensor tests\n- Check calibration\n- Verify data accuracy\n- Test in different conditions\n\n3. Advanced Testing:\n- Run full diagnostics\n- Check interference sources\n- Verify sensor fusion\n- Test redundancy systems\n\nIf sensor problems continue, scan QR code to report. Include sensor data, error states, and environmental conditions."
+    "System Temperature Issues": "Address overheating problems with these steps:\n\n1. Monitor Temperature Status:\n- Go to System Status page to view CPU and GPU temperatures\n- Normal: Below 60°C, Warm: 60-80°C, High: Above 80°C\n- Watch for temperature warnings and notifications\n- Check if temperatures are consistently high\n\n2. Immediate Actions for High Temperatures:\n- Ensure adequate ventilation around the system\n- Check for dust buildup on cooling components\n- Verify cooling fans are operating properly\n- Reduce system load if possible\n\n3. Prevention and Maintenance:\n- Keep system in well-ventilated area\n- Regularly clean dust from vents and fans\n- Monitor temperature trends over time\n- Avoid blocking air vents or cooling ports\n\nFor persistent overheating issues, contact support via QR code with temperature readings and environmental details."
   };
 
   return (
@@ -282,12 +237,12 @@ Robot Health:
         
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-semibold">Report Issue</h3>
+            <h3 className="text-xl font-semibold">Contact Us (QR)</h3>
             <Button 
               variant="outline"
               onClick={() => setIsQROpen(true)}
             >
-              📱 QR for Report Issue
+              📱 Contact Us (QR)
             </Button>
           </div>
           <Accordion type="single" collapsible className="w-full">
