@@ -1,7 +1,3 @@
-ChatGPT said:
-
-Here’s your full, updated document with the installation process replaced as requested and the TVoIP file note retained. The format is consistent with your provided structure:
-
 Guard – Intelligent Surveillance Robot
 
 A Robotic Surveillance System for Autonomous Patrol, AI Monitoring, and Push-to-Talk Communication
