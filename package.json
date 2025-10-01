@@ -102,7 +102,7 @@
   },
   "build": {
     "appId": "com.sakar.guard",
-    "productName": "Guard Controls",
+    "productName": "GuardControls",
     "files": [
       "dist/**",
       "electron.mjs",

@@ -18,9 +18,25 @@ declare global {
 }
 
 const Display = () => {
-  const [brightness, setBrightness] = useState([100]); // always 100%
+  const [brightness] = useState([100]); // Fixed at 100%, no setBrightness needed
   const { theme, setTheme, resolvedTheme } = useTheme();
   const { toast } = useToast();
+
+  // Force brightness to always be 100%
+  useEffect(() => {
+    const enforceBrightness = async () => {
+      try {
+        await window.system.brightness.set(100);
+      } catch (err) {
+        console.error("Failed to set brightness:", err);
+      }
+    };
+    
+    enforceBrightness();
+    // Run every minute to ensure brightness stays at 100%
+    const interval = setInterval(enforceBrightness, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Handle auto theme switching
   useEffect(() => {
@@ -52,24 +68,6 @@ const Display = () => {
     { id: "light", label: "LIGHT", icon: Sun },
     { id: "dark", label: "DARK", icon: Moon },
   ];
-
-  // Fetch current brightness on page load
-  useEffect(() => {
-    const fetchBrightness = async () => {
-      try {
-        const level = await window.system.brightness.get();
-        setBrightness([level]);
-      } catch (err) {
-        console.error("Failed to fetch brightness:", err);
-        toast({
-          variant: "destructive",
-          title: "Failed to fetch brightness",
-          description: err instanceof Error ? err.message : "Could not get screen brightness",
-        });
-      }
-    };
-    fetchBrightness();
-  }, []);
 
   // Brightness is read-only, no handler needed
 

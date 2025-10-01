@@ -172,38 +172,37 @@ const TalkButton = () => {
   return (
     <div className="flex flex-col items-center justify-center py-12 space-y-4">
       <Button
-        size="lg"
         onClick={handleMicToggle}
         disabled={isMuting || !isConnected}
-        className={`w-64 h-64 rounded-full text-white text-xl font-bold shadow-2xl ${
+        className={`w-96 h-96 rounded-full text-white text-3xl font-bold shadow-2xl ${
           !isConnected 
             ? 'bg-gray-400 cursor-not-allowed'
             : isMicMuted 
               ? 'bg-red-600 hover:bg-red-700' 
               : 'bg-green-600 hover:bg-green-700'
-        } transition-colors duration-300 flex flex-col items-center justify-center gap-2`}
+        } transition-colors duration-300 flex flex-col items-center justify-center gap-4`}
       >
         {isMicMuted ? (
           <>
-            <MicOff className="h-8 w-8" />
+            <MicOff className="h-16 w-16" />
             MIC OFF
           </>
         ) : (
           <>
-            <Mic className="h-8 w-8" />
+            <Mic className="h-16 w-16" />
             MIC ON
           </>
         )}
       </Button>
       
       {/* Connection Status */}
-      <div className={`text-sm font-medium ${isConnected ? 'text-green-500' : 'text-red-500'}`}>
+      <div className={`text-lg font-medium ${isConnected ? 'text-green-500' : 'text-red-500'}`}>
         {isConnected ? '🟢 Voice Chat Server Connected' : '🔴 Voice Chat Server Connection Failed'}
       </div>
       
       {/* Manual Connection Test */}
       {!isConnected && (
-        <div className="text-xs text-center space-y-2">
+        <div className="text-sm text-center space-y-2">
           <div className="text-orange-600">
             Connection failed. Make sure the backend server is running on port 5000.
           </div>

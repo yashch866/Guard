@@ -9,6 +9,7 @@ import re
 import shutil
 import sys
 from contextlib import asynccontextmanager
+import platform
 # import screen_brightness_control as sbc
 # import alsaaudio
 import socketio
@@ -374,6 +375,24 @@ async def system_temperature():
     if not temps:
         raise HTTPException(status_code=500, detail="Could not read system temperatures")
     return temps
+
+@fastapi_app.post("/system/reboot")
+async def reboot_system():
+    try:
+        system = platform.system().lower()
+        if system == "linux":
+            subprocess.run(["sudo", "shutdown", "-r", "now"], check=True)
+        elif system == "windows":
+            subprocess.run(["shutdown", "/r", "/t", "0"], check=True)
+        elif system == "darwin":  # macOS
+            subprocess.run(["sudo", "shutdown", "-r", "now"], check=True)
+        else:
+            raise HTTPException(status_code=400, detail=f"Unsupported operating system: {system}")
+        return {"message": "System reboot initiated"}
+    except subprocess.CalledProcessError as e:
+        raise HTTPException(status_code=500, detail=f"Failed to reboot: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 # --------------------------
 # Wi-Fi

@@ -66,3 +66,17 @@ export const getAdaptiveConfig = () => {
         wsUrl: WS_URL
     };
 };
+
+export async function getBackendUrl(): Promise<string> {
+    try {
+        const response = await fetch('/backend-config.json');
+        if (!response.ok) {
+            throw new Error('Failed to load backend config');
+        }
+        const config = await response.json();
+        return config.apiUrl || 'http://localhost:5000';
+    } catch (error) {
+        console.error('Error loading backend config:', error);
+        return 'http://localhost:5000'; // Fallback URL
+    }
+}

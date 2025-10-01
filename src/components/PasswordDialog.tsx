@@ -54,17 +54,17 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-lg mx-auto bg-card p-10 rounded-xl">
-        <div className="flex items-center justify-center mb-8">
-          <h2 className="text-2xl font-bold text-foreground">ENTER PASSWORD</h2>
+      <DialogContent className="max-w-2xl mx-auto bg-card p-16 rounded-2xl">
+        <div className="flex items-center justify-center mb-12">
+          <h2 className="text-4xl font-bold text-foreground">ENTER PASSWORD</h2>
         </div>
         
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-8">
           <Input
             type="password"
             value={password}
             onChange={handlePasswordChange}
-            className={`flex-1 text-center text-2xl py-6 ${error ? 'border-red-500' : ''}`}
+            className={`flex-1 text-center text-4xl py-8 h-24 text-[2.5rem] ${error ? 'border-red-500' : ''}`}
             placeholder="- - - -"
             maxLength={4}
             disabled={isLoading}
@@ -73,24 +73,24 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
           <Button
             onClick={handleSubmit}
             disabled={isLoading || !password}
-            className="bg-info hover:bg-info/90 text-white rounded-full p-6 disabled:opacity-50"
+            className="bg-info hover:bg-info/90 text-white rounded-full p-8 h-24 w-24 disabled:opacity-50"
             size="lg"
           >
-            <ArrowRight className="w-7 h-7" />
+            <ArrowRight className="w-12 h-12" />
           </Button>
         </div>
         
         {/* Error message */}
         {error && (
-          <div className="mt-4 text-center">
-            <p className="text-red-500 text-sm font-medium">{error}</p>
+          <div className="mt-8 text-center">
+            <p className="text-red-500 text-xl font-medium">{error}</p>
           </div>
         )}
         
         {/* Loading state */}
         {isLoading && (
-          <div className="mt-4 text-center">
-            <p className="text-muted-foreground text-sm">Checking password...</p>
+          <div className="mt-8 text-center">
+            <p className="text-muted-foreground text-xl">Checking password...</p>
           </div>
         )}
       </DialogContent>
