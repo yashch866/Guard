@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X, ArrowRight } from "lucide-react";
+import { X, ArrowRight, Delete } from "lucide-react";
 
 interface PasswordDialogProps {
   open: boolean;
@@ -42,6 +42,33 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
     }
   };
 
+  // Handle number pad input
+  const handleNumberPadInput = (digit: string) => {
+    if (password.length < 4) {
+      const newPassword = password + digit;
+      setPassword(newPassword);
+      if (error) {
+        setError("");
+      }
+    }
+  };
+
+  // Handle backspace
+  const handleBackspace = () => {
+    setPassword(password.slice(0, -1));
+    if (error) {
+      setError("");
+    }
+  };
+
+  // Handle clear
+  const handleClear = () => {
+    setPassword("");
+    if (error) {
+      setError("");
+    }
+  };
+
   // Reset state when dialog opens/closes
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
@@ -54,12 +81,12 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-2xl mx-auto bg-card p-16 rounded-2xl">
+      <DialogContent className="max-w-4xl mx-auto bg-card p-16 rounded-2xl">
         <div className="flex items-center justify-center mb-12">
           <h2 className="text-4xl font-bold text-foreground">ENTER PASSWORD</h2>
         </div>
         
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-8 mb-12">
           <Input
             type="password"
             value={password}
@@ -69,6 +96,7 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
             maxLength={4}
             disabled={isLoading}
             onKeyPress={(e) => e.key === "Enter" && handleSubmit()}
+            readOnly
           />
           <Button
             onClick={handleSubmit}
@@ -77,6 +105,50 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
             size="lg"
           >
             <ArrowRight className="w-12 h-12" />
+          </Button>
+        </div>
+
+        {/* Number Pad */}
+        <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8">
+          {/* Numbers 1-9 */}
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+            <Button
+              key={num}
+              onClick={() => handleNumberPadInput(num.toString())}
+              disabled={isLoading || password.length >= 4}
+              className="h-16 w-full text-2xl font-bold bg-muted hover:bg-muted/80 text-foreground border-2 border-border"
+              variant="outline"
+            >
+              {num}
+            </Button>
+          ))}
+        </div>
+
+        {/* Bottom row with 0, Clear, and Backspace */}
+        <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8">
+          <Button
+            onClick={handleClear}
+            disabled={isLoading}
+            className="h-16 w-full text-lg font-bold bg-destructive hover:bg-destructive/80 text-destructive-foreground"
+            variant="destructive"
+          >
+            Clear
+          </Button>
+          <Button
+            onClick={() => handleNumberPadInput("0")}
+            disabled={isLoading || password.length >= 4}
+            className="h-16 w-full text-2xl font-bold bg-muted hover:bg-muted/80 text-foreground border-2 border-border"
+            variant="outline"
+          >
+            0
+          </Button>
+          <Button
+            onClick={handleBackspace}
+            disabled={isLoading || password.length === 0}
+            className="h-16 w-full text-lg font-bold bg-secondary hover:bg-secondary/80 text-secondary-foreground flex items-center justify-center"
+            variant="secondary"
+          >
+            <Delete className="w-6 h-6" />
           </Button>
         </div>
         
