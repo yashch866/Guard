@@ -129,4 +129,4 @@ Proprietary software owned by Sakar Robotics. Unauthorized use or distribution i
 📬 Contact
 
 Sakar Robotics
-📧 Email: www.sakarrobotics.com/contact
+📧 Email: info@sakarrobotics.com
