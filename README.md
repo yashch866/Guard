@@ -94,7 +94,7 @@ npm install --save-dev vite
 npm run package
 
 # Run the packaged application
-./dist/Guard\ Controls-0.0.1.AppImage
+./dist/GuardControls-0.0.1.AppImage
 
 
 ✅ You should see: App is ready, starting backend...
