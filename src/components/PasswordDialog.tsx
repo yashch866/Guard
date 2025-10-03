@@ -81,17 +81,17 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-4xl mx-auto bg-card p-16 rounded-2xl">
+      <DialogContent className="max-w-[95vw] w-[1400px] mx-auto bg-card p-12 rounded-3xl">
         <div className="flex items-center justify-center mb-12">
-          <h2 className="text-4xl font-bold text-foreground">ENTER PASSWORD</h2>
+          <h2 className="text-5xl font-bold text-foreground">ENTER PASSWORD</h2>
         </div>
         
-        <div className="flex items-center gap-8 mb-12">
+        <div className="flex items-center gap-8 mb-12 max-w-[900px] mx-auto">
           <Input
             type="password"
             value={password}
             onChange={handlePasswordChange}
-            className={`flex-1 text-center text-4xl py-8 h-24 text-[2.5rem] ${error ? 'border-red-500' : ''}`}
+            className={`flex-1 text-center text-5xl py-8 h-28 text-[3rem] ${error ? 'border-red-500' : ''}`}
             placeholder="- - - -"
             maxLength={4}
             disabled={isLoading}
@@ -101,22 +101,22 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
           <Button
             onClick={handleSubmit}
             disabled={isLoading || !password}
-            className="bg-info hover:bg-info/90 text-white rounded-full p-8 h-24 w-24 disabled:opacity-50"
+            className="bg-info hover:bg-info/90 text-white rounded-full p-8 h-28 w-28 disabled:opacity-50"
             size="lg"
           >
-            <ArrowRight className="w-12 h-12" />
+            <ArrowRight className="w-14 h-14" />
           </Button>
         </div>
 
-        {/* Number Pad */}
-        <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8">
+        {/* Number Pad with larger buttons and more spacing */}
+        <div className="grid grid-cols-3 gap-8 w-full max-w-[1200px] mx-auto mb-8">
           {/* Numbers 1-9 */}
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
             <Button
               key={num}
               onClick={() => handleNumberPadInput(num.toString())}
               disabled={isLoading || password.length >= 4}
-              className="h-16 w-full text-2xl font-bold bg-muted hover:bg-muted/80 text-foreground border-2 border-border"
+              className="h-36 w-full text-6xl font-bold bg-muted hover:bg-muted/80 text-foreground border-2 border-border rounded-3xl transition-colors"
               variant="outline"
             >
               {num}
@@ -125,11 +125,11 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
         </div>
 
         {/* Bottom row with 0, Clear, and Backspace */}
-        <div className="grid grid-cols-3 gap-4 max-w-md mx-auto mb-8">
+        <div className="grid grid-cols-3 gap-8 w-full max-w-[1200px] mx-auto mb-8">
           <Button
             onClick={handleClear}
             disabled={isLoading}
-            className="h-16 w-full text-lg font-bold bg-destructive hover:bg-destructive/80 text-destructive-foreground"
+            className="h-36 w-full text-3xl font-bold bg-destructive hover:bg-destructive/80 text-destructive-foreground rounded-3xl transition-colors"
             variant="destructive"
           >
             Clear
@@ -137,7 +137,7 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
           <Button
             onClick={() => handleNumberPadInput("0")}
             disabled={isLoading || password.length >= 4}
-            className="h-16 w-full text-2xl font-bold bg-muted hover:bg-muted/80 text-foreground border-2 border-border"
+            className="h-36 w-full text-6xl font-bold bg-muted hover:bg-muted/80 text-foreground border-2 border-border rounded-3xl transition-colors"
             variant="outline"
           >
             0
@@ -145,24 +145,24 @@ const PasswordDialog = ({ open, onClose, onSuccess }: PasswordDialogProps) => {
           <Button
             onClick={handleBackspace}
             disabled={isLoading || password.length === 0}
-            className="h-16 w-full text-lg font-bold bg-secondary hover:bg-secondary/80 text-secondary-foreground flex items-center justify-center"
+            className="h-36 w-full text-3xl font-bold bg-secondary hover:bg-secondary/80 text-secondary-foreground flex items-center justify-center rounded-3xl transition-colors"
             variant="secondary"
           >
-            <Delete className="w-6 h-6" />
+            <Delete className="w-12 h-12" />
           </Button>
         </div>
         
         {/* Error message */}
         {error && (
           <div className="mt-8 text-center">
-            <p className="text-red-500 text-xl font-medium">{error}</p>
+            <p className="text-red-500 text-2xl font-medium">{error}</p>
           </div>
         )}
         
         {/* Loading state */}
         {isLoading && (
           <div className="mt-8 text-center">
-            <p className="text-muted-foreground text-xl">Checking password...</p>
+            <p className="text-muted-foreground text-2xl">Checking password...</p>
           </div>
         )}
       </DialogContent>

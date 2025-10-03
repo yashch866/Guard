@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { socket } from "@/lib/socket";
 import { useToast } from "@/components/ui/use-toast";
-
+ 
 interface CameraStatus {
   connected: boolean;
   status: string;
@@ -19,7 +19,7 @@ interface CameraStatus {
     info: string;
   }>;
 }
-
+ 
 const SystemStatus = () => {
   const [showQRModal, setShowQRModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +31,7 @@ const SystemStatus = () => {
   const [gpuTemp, setGpuTemp] = useState<number | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-
+ 
   // Handle socket connection status and WiFi updates
   useEffect(() => {
     const handleConnect = () => {
@@ -42,7 +42,7 @@ const SystemStatus = () => {
         duration: 3000
       });
     };
-
+ 
     const handleDisconnect = () => {
       setSocketConnected(false);
       toast({
@@ -52,32 +52,32 @@ const SystemStatus = () => {
         duration: null // Keep showing until reconnected
       });
     };
-
+ 
     const fetchCameraStatus = async () => {
       try {
         console.log("Fetching camera status...");
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
+ 
         const response = await fetch("http://localhost:5000/system/camera", {
           signal: controller.signal
         });
         clearTimeout(timeoutId);
-
+ 
         if (!response.ok) {
           const errorText = await response.text();
           console.error("Camera status error response:", errorText);
           throw new Error(`Server error: ${errorText}`);
         }
-
+ 
         const data = await response.json();
         console.log("Camera status response:", data);
         
         // Determine the current state
-        const currentState = data.connected 
-          ? (data.status === "Active" ? "STREAMING" : "CONNECTED") 
+        const currentState = data.connected
+          ? (data.status === "Active" ? "STREAMING" : "CONNECTED")
           : "DISCONNECTED";
-
+ 
         // Only show notification if the state has changed
         if (currentState !== prevCameraState) {
           if (data.connected) {
@@ -123,13 +123,13 @@ const SystemStatus = () => {
         setCameraStatus(null);
       }
     };
-
+ 
     socket.on("connect", handleConnect);
     socket.on("disconnect", handleDisconnect);
-
+ 
     // Initial connection status
     setSocketConnected(socket.connected);
-
+ 
     // System temperature monitoring
     const fetchTemperatures = async () => {
       try {
@@ -142,15 +142,15 @@ const SystemStatus = () => {
         console.error("Error fetching temperatures:", error);
       }
     };
-
+ 
     // Fetch camera status initially and set up polling
     fetchCameraStatus();
     const cameraInterval = setInterval(fetchCameraStatus, 5000); // Update every 5 seconds
-
+ 
     // Set up temperature polling
     const tempInterval = setInterval(fetchTemperatures, 2000); // Update every 2 seconds
     fetchTemperatures(); // Initial fetch
-
+ 
     return () => {
       socket.off("connect", handleConnect);
       socket.off("disconnect", handleDisconnect);
@@ -158,7 +158,7 @@ const SystemStatus = () => {
       clearInterval(cameraInterval);
     };
   }, [toast, prevCameraState]);
-
+ 
   const handlePasswordSuccess = () => {
     setShowPassword(false);
     navigate("/settings/general");
@@ -171,24 +171,25 @@ const SystemStatus = () => {
       <div className="p-8">
         <h1 className="text-2xl font-bold text-center mb-8">SYSTEM STATUS</h1>
         
-        <div className="grid grid-cols-2 gap-6 mb-8">
-          <Card className="p-8 text-center h-48 flex flex-col justify-center">
+        {/* Camera Status Card - Centered above temperature cards */}
+        <div className="flex justify-center mb-8">
+          <Card className="p-8 text-center h-48 flex flex-col justify-center w-[calc(50%-12px)]">
             <CardContent className="p-0 flex flex-col items-center">
               <div className="flex flex-col items-center space-y-4">
                 <div className={`text-2xl font-bold ${
-                  cameraStatus?.connected 
+                  cameraStatus?.connected
                     ? 'text-green-500'
                     : 'text-red-500'
                 }`}>
-                  {cameraStatus?.connected 
+                  {cameraStatus?.connected
                     ? 'CONNECTED'
                     : 'DISCONNECTED'
                   }
                 </div>
                 <div className="flex flex-col items-center space-y-2 max-w-[200px]">
                   {cameraStatus?.devices.map((device, index) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       className={`text-sm text-muted-foreground px-4 py-1 rounded-full ${
                         device.active ? 'bg-green-100' : 'bg-gray-100'
                       }`}
@@ -202,7 +203,7 @@ const SystemStatus = () => {
             </CardContent>
           </Card>
         </div>
-
+ 
         <div className="grid grid-cols-2 gap-6">
           <Card className="p-8 text-center h-48 flex flex-col justify-center">
             <CardContent className="p-0">
@@ -211,8 +212,8 @@ const SystemStatus = () => {
                   {typeof cpuTemp === 'number' ? `${cpuTemp}°C` : "--°C"}
                 </div>
                 <div className="text-lg text-muted-foreground">
-                  {cpuTemp && cpuTemp > 80 ? "High!" : 
-                   cpuTemp && cpuTemp > 60 ? "Warm" : 
+                  {cpuTemp && cpuTemp > 80 ? "High!" :
+                   cpuTemp && cpuTemp > 60 ? "Warm" :
                    cpuTemp ? "Normal" : "Reading..."}
                 </div>
               </div>
@@ -227,8 +228,8 @@ const SystemStatus = () => {
                   {typeof gpuTemp === 'number' ? `${gpuTemp}°C` : "--°C"}
                 </div>
                 <div className="text-lg text-muted-foreground">
-                  {gpuTemp && gpuTemp > 80 ? "High!" : 
-                   gpuTemp && gpuTemp > 60 ? "Warm" : 
+                  {gpuTemp && gpuTemp > 80 ? "High!" :
+                   gpuTemp && gpuTemp > 60 ? "Warm" :
                    gpuTemp ? "Normal" : "Reading..."}
                 </div>
               </div>
@@ -266,5 +267,6 @@ const SystemStatus = () => {
     </div>
   );
 };
-
+ 
 export default SystemStatus;
+ 
