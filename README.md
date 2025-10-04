@@ -1,77 +1,80 @@
-Guard – Intelligent Surveillance Robot
+# Guard – Intelligent Surveillance Robot
 
 A Robotic Surveillance System for Autonomous Patrol, AI Monitoring, and Push-to-Talk Communication
 
-🛰️ Introduction
+## 🛰️ Introduction
 
 Guard is a robotic surveillance system designed to autonomously patrol predefined areas and provide real-time security monitoring. It follows user-set patrol routines, streams live video feeds to a central dashboard, and offers AI-powered features such as:
 
-Unauthorized person detection
+- Unauthorized person detection
+- Vehicle number plate recognition
+- Event logging
+- Emergency communication via Push-to-Talk (PTT)
 
-Vehicle number plate recognition
+### ⚠️ Important Note
 
-Event logging
+After cloning, the **TVoIP** folder should be placed in the **same path** as the Guard folder (they must be siblings), as it is required for Push-to-Talk (PTT) functionality.
 
-Emergency communication via Push-to-Talk (PTT)
-
-⚠️ Note: After cloning, the TVoIP folder should be placed in the same path as the guard folder (they must be siblings), as it is required for Push-to-Talk (PTT) functionality.
-
-📁 Example structure:
-/home/username/guard
+📁 **Example structure:**
+```
+/home/username/Guard
 /home/username/TVoIP
+```
 
-📦 Overview
+## 📦 Overview
 
-This repository contains the Guard Robot Dashboard source code. The dashboard runs on the robot itself, acting as a bridge between the robot’s sensors/cameras and the main central control dashboard used by security operators.
+This repository contains the Guard Robot Dashboard source code. The dashboard runs on the robot itself, acting as a bridge between the robot's sensors/cameras and the main central control dashboard used by security operators.
 
 🔗 The Guard ecosystem integrates:
+- Autonomous robot patrols for real-time area monitoring
+- AI-driven surveillance (face/object detection, number plate recognition)
+- Emergency communication via TVoIP / Push-to-Talk (PTT)
+- Secure evidence collection with timestamped video logs
 
-Autonomous robot patrols for real-time area monitoring
+## 🛠️ Development Workflow
 
-AI-driven surveillance (face/object detection, number plate recognition)
+- All feature development happens in `feature/*` branches
+- Completed features are merged into the `development` branch
+- Stable releases are created from `development` and merged into `main`
 
-Emergency communication via TVoIP / Push-to-Talk (PTT)
+## 🌟 Key Features
 
-Secure evidence collection with timestamped video logs
+✅ **Autonomous Patrol & Live Monitoring** – Robot follows user-defined routes and streams live feed to the dashboard.
 
-🛠️ Development Workflow
+✅ **AI-Powered Surveillance** – Detects unauthorized persons (YOLO + ArcFace) and captures vehicle plates (EasyOCR).
 
-All feature development happens in feature/* branches
+✅ **Robot Dashboard (Onboard)** – Includes Push-to-Talk (PTT/TVoIP) support for emergency communication.
 
-Completed features are merged into the development branch
+✅ **Evidence & Reporting** – Records and timestamps all detections; playback is searchable.
 
-Stable releases are created from development and merged into main
+✅ **Admin & Security Controls** – Role-based authentication and encrypted storage for patrol logs and evidence.
 
-🌟 Key Features
+## 🧰 Installation Guide
 
-✅ Autonomous Patrol & Live Monitoring – Robot follows user-defined routes and streams live feed to the dashboard.
+### 📥 Download the Application
 
-✅ AI-Powered Surveillance – Detects unauthorized persons (YOLO + ArcFace) and captures vehicle plates (EasyOCR).
-
-✅ Robot Dashboard (Onboard) – Includes Push-to-Talk (PTT/TVoIP) support for emergency communication.
-
-✅ Evidence & Reporting – Records and timestamps all detections; playback is searchable.
-
-✅ Admin & Security Controls – Role-based authentication and encrypted storage for patrol logs and evidence.
-
-🧰 Installation Guide
-📥 Download the Application
+```bash
 git clone https://github.com/yashch866/Guard.git
 cd Guard/
+```
 
-⚠️ Move the TVoIP Folder
+### ⚠️ Move the TVoIP Folder
 
 After cloning, move the TVoIP folder out of guard so it becomes a sibling:
 
+```bash
 mv guard/tvoip ../
-
+```
 
 Your project structure should now look like:
-
+```
 /home/username/Guard
 /home/username/TVoIP
+```
 
-🧪 Backend & Frontend Setup
+### 🧪 Backend & Frontend Setup
+
+```bash
 # Create and activate virtual environment
 python3 -m venv guard-env
 source guard-env/bin/activate
@@ -95,38 +98,38 @@ npm run package
 
 # Run the packaged application
 ./dist/GuardControls-0.0.1.AppImage
+```
 
+✅ You should see: **App is ready, starting backend...**
 
-✅ You should see: App is ready, starting backend...
+## 🚀 Usage Guide
 
-🚀 Usage Guide
+- **Autonomous Patrol & Live Monitoring** – Robot patrols user-defined routes and streams live video.
+- **AI-Powered Surveillance** – Detects unauthorized persons and vehicles, logs incidents.
+- **Push-to-Talk (PTT / TVoIP)** – Two-way emergency communication with operators.
+- **Evidence & Reporting** – Timestamped logs with searchable playback for investigations.
+- **Admin Settings** – Role-based dashboard access; update patrol routes and authorized personnel.
 
-Autonomous Patrol & Live Monitoring – Robot patrols user-defined routes and streams live video.
+## 🧱 Technical Stack
 
-AI-Powered Surveillance – Detects unauthorized persons and vehicles, logs incidents.
+| Component | Technology |
+|-----------|-----------|
+| Backend | Python (FastAPI, Pandas, OpenCV, NumPy) |
+| Frontend | Node.js + Vite |
+| AI Models | YOLOv8, ArcFace, EasyOCR |
+| Audio | PyAlsaAudio, PulseAudio, TVoIP |
+| Hardware | Jetson Orin Nano |
 
-Push-to-Talk (PTT / TVoIP) – Two-way emergency communication with operators.
-
-Evidence & Reporting – Timestamped logs with searchable playback for investigations.
-
-Admin Settings – Role-based dashboard access; update patrol routes and authorized personnel.
-
-🧱 Technical Stack
-Component	Technology
-Backend	Python (FastAPI, Pandas, OpenCV, NumPy)
-Frontend	Node.js + Vite
-AI Models	YOLOv8, ArcFace, EasyOCR
-Audio	PyAlsaAudio, PulseAudio, TVoIP
-Hardware	Jetson Orin Nano
-🤝 Contributing
+## 🤝 Contributing
 
 Currently managed internally. Contact the development team for feedback or issues.
 
-📜 License
+## 📜 License
 
 Proprietary software owned by Sakar Robotics. Unauthorized use or distribution is prohibited.
 
-📬 Contact
+## 📬 Contact
 
-Sakar Robotics
+**Sakar Robotics**
+
 📧 Email: info@sakarrobotics.com
